@@ -23,18 +23,15 @@ public class Pathfinder : MonoBehaviour
 
     public List<Waypoint> GetPath()
     {
-        LoadBlocks();
-        ColorStartAndEnd();
-        BreadthFirstSearch();
-        CreatePath();
+        if (path.Count == 0)
+        {
+            LoadBlocks();
+            ColorStartAndEnd();
+            BreadthFirstSearch();
+            CreatePath();
+        }
 
         return path;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
     }
 
     private void CreatePath()
@@ -42,12 +39,17 @@ public class Pathfinder : MonoBehaviour
         Waypoint current = end;
         while (current != start)
         {
-            path.Add(current);
-            current.SetTopColor(Color.black);
+            AddToPath(current);
             current = current.exploredFrom;
         }
-        path.Add(current); // start
+        AddToPath(current);
         path.Reverse();
+    }
+
+    private void AddToPath(Waypoint current)
+    {
+        path.Add(current);
+        current.isPlaceable = false;
     }
 
     private void BreadthFirstSearch()
@@ -94,7 +96,7 @@ public class Pathfinder : MonoBehaviour
         }
         else
         {
-            neighbor.SetTopColor(Color.cyan);
+            //neighbor.SetTopColor(Color.cyan);
             queue.Enqueue(neighbor);
             neighbor.exploredFrom = searchCenter;
         }
@@ -102,8 +104,8 @@ public class Pathfinder : MonoBehaviour
 
     private void ColorStartAndEnd()
     {
-        start.SetTopColor(Color.red);
-        end.SetTopColor(Color.blue);
+        //start.SetTopColor(Color.red);
+        //end.SetTopColor(Color.blue);
     }
 
     private void LoadBlocks()
@@ -114,24 +116,11 @@ public class Pathfinder : MonoBehaviour
             if (!grid.ContainsKey(waypoint.GridPos))
             {
                 grid.Add(waypoint.GridPos, waypoint);
-                //if (waypoint == start)
-                //    waypoint.SetTopColor(Color.red);
-                //else if (waypoint == end)
-                //    waypoint.SetTopColor(Color.blue);
-                //else
-                //    waypoint.SetTopColor(Color.black);
             }
             else
             {
                 Debug.LogWarning("Skipping overlapping block: " + waypoint);
             }
         }
-        //print("Loaded " + grid.Count + " blocks");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
