@@ -7,6 +7,7 @@ public class Waypoint : MonoBehaviour
     public bool isExplored = false;
     public Waypoint exploredFrom = null;
     public bool isPlaceable = true;
+    public bool hasTower = false;
 
     private Vector2Int gridPos;
     private const int gridSize = 10;
@@ -22,13 +23,13 @@ public class Waypoint : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (isPlaceable)
+            if (isPlaceable && !hasTower)
             {
-                print(gameObject.name);
+                FindObjectOfType<TowerFactory>().AddTower(this);
             }
             else
             {
-                print(gameObject.name + " IS NOT PLACEABLE");
+                //print(gameObject.name + " IS NOT PLACEABLE");
             }
         }
     }

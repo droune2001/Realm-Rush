@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+    [SerializeField] float movementPeriod = .5f;
+    [SerializeField] ParticleSystem goalParticlePrefab = null;
+
     void Start()
     {
         Pathfinder pathfinder = FindObjectOfType<Pathfinder>();
@@ -17,12 +20,17 @@ public class EnemyMovement : MonoBehaviour
         foreach(Waypoint waypoint in path)
         {
             transform.position = waypoint.transform.position;
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(movementPeriod);
         }
+        SelfDestruct();
     }
 
-    void Update()
+    private void SelfDestruct()
     {
-        
+        var goalParticleRef = Instantiate(goalParticlePrefab, transform.position, Quaternion.identity);
+        goalParticleRef.Play();
+        float remainingTime = goalParticleRef.main.duration;
+        Destroy(goalParticleRef, remainingTime);
+        Destroy(gameObject);
     }
 }

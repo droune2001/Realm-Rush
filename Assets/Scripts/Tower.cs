@@ -12,6 +12,7 @@ public class Tower : MonoBehaviour
     
     // State
     Transform targetEnemy = null;
+    public Waypoint baseWaypoint = null;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +43,10 @@ public class Tower : MonoBehaviour
         Transform closestEnemy = sceneEnemies[0].transform;
         foreach (EnemyDamage enemy in sceneEnemies)
         {
-            closestEnemy = GetClosest(closestEnemy.transform, enemy.transform);
+            if (!enemy.isDead)
+            {
+                closestEnemy = GetClosest(closestEnemy.transform, enemy.transform);
+            }
         }
 
         targetEnemy = closestEnemy;
